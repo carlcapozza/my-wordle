@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Game - Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        {% if result == "win" %}
+        <h1>Congratulations! You Won! 🎉</h1>
+        <p>It took you {{ attempts }} attempts.</p>
+        {% elif result == "lose" %}
+        <h1>Game Over! 😞</h1>
+        <p>The correct word was {{ correct_word }}.</p>
+        {% endif %}
+        <form method="POST" action="{{ url_for('start_game') }}">
+            <button type="submit">Play Again</button>
+        </form>
+    </div>
+</body>
+
+</html>

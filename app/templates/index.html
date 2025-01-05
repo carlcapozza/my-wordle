@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Wordle Game</h1>
+        {% if game_active %}
+        <h2>Make your guess!</h2>
+        <form method="POST" action="{{ url_for('make_guess') }}">
+            <input type="text" name="guess" maxlength="5" placeholder="Enter 5-letter word" required>
+            <button type="submit">Submit</button>
+        </form>
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+        <h3>Previous Attempts</h3>
+        <ul>
+            {% for attempt in attempts %}
+            <li>
+                {{ attempt.guess }} -
+                {% for color in attempt.feedback %}
+                <span class="{{ color }}">{{ color }}</span>
+                {% endfor %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <h2>Start a New Game</h2>
+        <form method="POST" action="{{ url_for('start_game') }}">
+            <button type="submit">Start Game</button>
+        </form>
+        {% endif %}
+    </div>
+</body>
+
+</html>
