@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      FLASK_APP: app/routes.py
+    depends_on:
+      - test  # Ensure tests pass before starting the web service
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: test  # Use the test stage from the Dockerfile
+    entrypoint: ["pytest", "--maxfail=1", "--disable-warnings", "--tb=short"]
+    volumes:
+      - .:/app  # Ensure code is synced for testing
