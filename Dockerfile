@@ -1,3 +1,4 @@
+
 FROM python:3.9-slim AS base
 
 WORKDIR /app
@@ -14,7 +15,6 @@ FROM base AS test
 
 RUN pip install pytest
 
-# Run the tests
 RUN pytest --maxfail=1 --disable-warnings
 
 FROM base AS production
