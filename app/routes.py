@@ -2,12 +2,13 @@ from flask import Flask, render_template, request, redirect, session, url_for
 import random
 from app.words import WORD_LIST
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='static')
 app.secret_key = "supersecretkey"
 
 @app.route('/')
 def index():
-    if 'word' not in session:
+    """Home page where users can start the game."""
+    if 'target_word' not in session:
         return render_template('index.html', game_active=False)
     return render_template('index.html', game_active=True, attempts=session.get('attempts', []))
 
@@ -18,10 +19,10 @@ def start_game():
     session['attempts'] = []
     return redirect('/')
 
-
 @app.route('/guess', methods=['POST'])
 def make_guess():
-    if 'word' not in session:
+    """Handle a player's guess and show the result."""
+    if 'target_word' not in session:
         return redirect(url_for('index'))
 
     guess = request.form.get('guess', '').upper()
@@ -29,7 +30,7 @@ def make_guess():
         error_message = "Invalid input. Guess must be a 5-letter word."
         return render_template('index.html', game_active=True, attempts=session.get('attempts', []), error=error_message)
 
-    target_word = session['word']
+    target_word = session['target_word']
     feedback = []
 
     for i, letter in enumerate(guess):
@@ -40,18 +41,19 @@ def make_guess():
         else:
             feedback.append("gray")
 
+    # Update session attempts
     attempts = session.get('attempts', [])
     attempts.append({"guess": guess, "feedback": feedback})
     session['attempts'] = attempts
 
     if guess == target_word:
         attempts_count = len(session['attempts'])
-        session.pop('word')
+        session.pop('target_word')
         session.pop('attempts')
         return render_template('result.html', result="win", attempts=attempts_count)
 
     if len(session['attempts']) >= 6:
-        correct_word = session.pop('word')
+        correct_word = session.pop('target_word')
         session.pop('attempts')
         return render_template('result.html', result="lose", correct_word=correct_word)
 
@@ -59,6 +61,5 @@ def make_guess():
 
 @app.route('/')
 def game_status():
-    guesses = session.get('guesses', [])
+    guesses = session.get('attempts', [])
     return render_template('index.html', guesses=guesses)
-
