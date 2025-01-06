@@ -24,15 +24,15 @@ Follow these steps to set up, run, and test the Wordle game implementation.
 1. **Clone this repository**:
 
    ```shell
-   git clone https://github.com/your-username/my-wordle-test.git
-   cd my-wordle-test
+   git clone https://github.com/carlcapozza/my-wordle.git
+   cd my-wordle
    ```
 
 2. **(Optional) Create and activate a virtual environment**:
 
    ```shell
    python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   source venv/bin/activate
    ```
 
 3. **Install required dependencies**:
@@ -46,7 +46,7 @@ Follow these steps to set up, run, and test the Wordle game implementation.
    Start the Wordle game:
 
    ```shell
-   python wordle.py
+   FLASK_APP=app/routes.py flask run
    ```
 
    Follow the on-screen instructions to play.
@@ -57,14 +57,14 @@ Follow these steps to set up, run, and test the Wordle game implementation.
 
 1. **Build the Docker Image**:
 
-   ```bash
+   ```shell
    docker build -t flask-wordle-app .
    ```
 
 2. **Run the Application**:
 
-   ```bash
-   docker run --rm -p 8080:8080 --name flask-wordle-app-container flask-wordle-app
+   ```shell
+   docker run --rm -p 8080:8080 --name flask-wordle-app-container -e FLASK_APP=app/routes.py flask-wordle-app
    ```
 
    Access the game in your browser at `http://localhost:8080`.
@@ -85,7 +85,7 @@ This project includes a `docker-compose.yml` file to simplify running the applic
 1. **Build and Run the Application with Tests**:
 
    ```bash
-   docker-compose up --build
+   docker compose up --build
    ```
 
    - The `test` service runs `pytest` during the build process.
@@ -95,13 +95,13 @@ This project includes a `docker-compose.yml` file to simplify running the applic
    Run tests directly without starting the web service:
 
    ```bash
-   docker-compose run --rm test
+   docker compose run --rm test
    ```
 
 3. **Run the Web Application Without Tests**:
 
    ```bash
-   docker-compose up web
+   docker compose up web
    ```
 
 ---
